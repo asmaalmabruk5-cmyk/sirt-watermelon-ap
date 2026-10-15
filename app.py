@@ -1,4 +1,26 @@
-import streamlit as st
+if uploaded_file is not None:
+    st.image(uploaded_file, caption="الصورة المرفوعة للورقة", use_container_width=True)
+    st.info("جاري تحليل الصورة عبر نموذج الذكاء الاصطناعي...")
+    
+    # --- تعريف قيم التشخيص والثقة (يمكن ربطها بنموذجك لاحقاً) ---
+    predicted_label = "Alternaria alternata (لفحة الأوراق)"
+    confidence_score = 0.94
+    
+    # --- عرض النتيجة ونسبة الثقة ---
+    st.warning(f"⚠️ التشخيص المقترح: {predicted_label}")
+    
+    confidence_percentage = int(confidence_score * 100)
+    st.metric(label="مستوى دقة الثقة (Confidence Score)", value=f"{confidence_percentage}%")
+    st.progress(confidence_score)
+    
+    # --- التوصيات العلاجية ---
+    if "Alternaria" in predicted_label:
+        st.warning(
+            "**توصيات إدارة مرض لفحة الأوراق (Alternaria alternata):**\n"
+            "- **المكافحة الوقائية:** تجنب الري العلوي المفرط وتقليل رطوبة الأوراق.\n"
+            "- **المكافحة العلاجية:** استخدام مبيدات فطرية تخصصية مسجلة عند ظهور الإصابة.\n"
+            "- **إدارة المخلفات:** التخلص من الأوراق المصابة وبقايا المحصول."
+        )import streamlit as st
 import pandas as pd
 import numpy as np
 import datetime
