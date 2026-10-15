@@ -1,30 +1,47 @@
-
 import streamlit as st
 
-# (تأكدي من وجود كود رفع الملف أعلى هذه الجزئية)
-# uploaded_file = st.file_uploader("اختر صورة الورقة المصابة...", type=["jpg", "jpeg", "png"])
+# إعدادات صفحة التطبيق
+st.set_page_config(
+    page_title="تشخيص لفحة أوراق البطيخ",
+    page_icon="🍉",
+    layout="centered"
+)
+
+st.title("🍉 نظام تشخيص مرض لفحة أوراق البطيخ (Alternaria alternata)")
+st.markdown("أداة ميدانية مخصصة للمزارعين والباحثين لتحليل صور الأوراق وتقديم التوصيات العلاجية الفورية.")
+st.markdown("---")
+
+# أداة رفع الصورة
+uploaded_file = st.file_uploader("اختر صورة ورقة البطيخ المصابة...", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    # 1. عرض الصورة المرفوعة
-    st.image(uploaded_file, caption="الصورة المرفوعة للورقة", use_container_width=True)
-    st.info("جاري تحليل الصورة عبر نموذج الذكاء الاصطناعي...")
+    # عرض الصورة المرفوعة
+    st.image(uploaded_file, caption="الصورة المرفوعة للورقة", width='stretch')
     
-    # 2. نتائج المحاكاة
-    predicted_label = "Alternaria alternata (لفحة الأوراق)"
-    confidence_score = 0.94
+    with st.spinner("جاري تحليل الصورة عبر نموذج الذكاء الاصطناعي..."):
+        # محاكاة لنتيجة التشخيص
+        predicted_label = "Alternaria alternata (لفحة الأوراق)"
+        confidence_score = 0.94
     
-    # 3. عرض النتيجة
+    # عرض النتيجة بنسبة الثقة
     st.warning(f"⚠️ التشخيص المقترح: {predicted_label}")
+    st.metric(label="نسبة الثقة في النموذج", value=f"{confidence_score * 100:.1f}%")
     
-    confidence_percentage = int(confidence_score * 100)
-    st.metric(label="مستوى دقة الثقة (Confidence)", value=f"{confidence_percentage}%")
-    st.progress(confidence_score)
+    # قسم التوصيات العلاجية والوقائية
+    st.markdown("---")
+    st.subheader("🌾 التوصيات العلاجية والوقائية للمزارعين")
     
-    # 4. --- التوصيات العلاجية ---
-    if "Alternaria" in predicted_label:
-        st.warning("""
-توصيات إدارة مرض لفحة الأوراق (Alternaria alternata):
-- المكافحة الوقائية: تجنب الري العلوي المفرط وتقليل رطوبة الأوراق ورش المبيدات الوقائية.
-- المكافحة العلاجية: استخدام مبيدات فطرية تخصصية مسجلة عند ظهور الإصابة الأولى.
-- إدارة المخلفات: التخلص من الأوراق المصابة وبقايا المحصول لمنع بقاء الجراثيم.
-""")
+    with st.expander("1. المكافحة الزراعية والوقائية", expanded=True):
+        st.markdown("""
+        - استخدام بذور معقمة وخالية من الإصابات والاعتناء بالدورة الزراعية.
+        - تجنب الري المفرط بالرش العلوي لتقليل الرطوبة الحضرية على الأوراق.
+        - إزالة الحشائش وبقايا المحاصيل المصابة والتخلص منها بحرقها أو طمرها عميقاً.
+        """)
+        
+    with st.expander("2. المكافحة الكيميائية الموصى بها"):
+        st.markdown("""
+        - الرش الوقائي أو العلاجي عند ظهور أولى علامات الإصابة باستخدام مبيدات فطرية مناسبة (مثل المبيدات النحاسية أو الترايزولات).
+        - الالتزام بالتركيز الموصى به وفترة الأمان قبل الحصاد لضمان سلامة الثمار.
+        """)
+else:
+    st.info("الرجاء رفع صورة واضحة لورقة البطيخ المصابة لبدء التشخيص وعرض التوصيات.")
